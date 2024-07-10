@@ -63,7 +63,7 @@ void setup()
 {
     pinMode(D7,OUTPUT); //this looks like trash test test
     pinMode(D8,OUTPUT);
-    pinMode(D9,OUTPUT); 
+    pinMode(D9,OUTPUT); //github
     pinMode(D0,OUTPUT);
     pinMode(D2,OUTPUT);
     pinMode(D4,OUTPUT);
