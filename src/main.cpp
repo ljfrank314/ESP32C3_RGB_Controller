@@ -24,7 +24,7 @@ std::vector<Color> colorList;
 
 unsigned long startTime;
 unsigned long currentTime;
-int fps = 1; //desired framerate
+int fps = 30; //desired framerate
 float period; //declaring here because i think i should define it later?????
 
 void setColor(Color& color)
@@ -61,6 +61,7 @@ void handleRoot()
 
 void setup()
 {
+    Serial.begin(115200);
     pinMode(D7,OUTPUT); //this looks like trash test test
     pinMode(D8,OUTPUT);
     pinMode(D9,OUTPUT); //github
@@ -92,11 +93,11 @@ void setup()
 
     server.begin();
 
-    colorList.push_back(Color(256,256,256,100000));
-    colorList.push_back(Color(2,256,25,100000));
-    colorList.push_back(Color(256,26,25,100000));
-    colorList.push_back(Color(256,56,25,100000));
-    colorList.push_back(Color(0,0,0,10000));
+    colorList.push_back(Color(256,256,256,100));
+    colorList.push_back(Color(2,256,25,100));
+    colorList.push_back(Color(256,26,25,100));
+    colorList.push_back(Color(256,56,25,100));
+    colorList.push_back(Color(0,0,0,100));
 
     period = 1000/fps;
     startTime = millis();
@@ -145,5 +146,11 @@ void loop()
         }
 
         startTime = currentTime;
+
+        Serial.print("\n\n\n\n\n\n\n\n\n\n\n");
+        Serial.println(colorList.back().red);
+        Serial.println(colorTime);
+        Serial.println(localColor.red);
+
     }
 }
