@@ -8,9 +8,10 @@ public:
     int red;
     int green;
     int blue;
-    float riseTime;
+    int riseTime;
+    float alpha;
 
-    Color(int r, int g, int b, float t);
+    Color(int r, int g, int b, int t, float a);
     Color(int r, int g, int b);
 
     bool operator==(const Color& other) const;

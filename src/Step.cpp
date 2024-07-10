@@ -3,6 +3,5 @@
 float robjohn(float t, float d, float a) //weird blend curve found on stack overflow, i just named it after OP. higher values of a produce a steeper slope in the middle. d is the duration of the step
 {
     float pwr = pow( t , a );
-    if (a == 1) return t; //a = 1 is linear and we're all about low level performace here
-    else return pwr/( pwr + pow( (d-t) , a ) );
+    return pwr/( pwr + pow( (d-t) , a ) );
 }

@@ -37,19 +37,20 @@ void setColor(Color& color)
 
 void handleRGB()
 {
-    if (server.hasArg("red") && server.hasArg("green") && server.hasArg("blue") && server.hasArg("rise_time"))
+    if (server.hasArg("red") && server.hasArg("green") && server.hasArg("blue") && server.hasArg("rise_time") && server.hasArg("alpha"))
     {
         Color color(
             server.arg("red").toInt(),
             server.arg("green").toInt(),
             server.arg("blue").toInt(),
-            server.arg("rise_time").toFloat());
+            server.arg("rise_time").toInt(),
+            server.arg("alpha").toFloat());
         colorList.push_back(color);
-        server.send(200, "text/plain", "Command Recieved");
+        server.send(200, "text/plain", "Command Recieved \n");
     }
     else
     {
-        server.send(400, "text/plain", "shit.");
+        server.send(400, "text/plain", "shit. \n");
     }
 
 }
@@ -93,11 +94,7 @@ void setup()
 
     server.begin();
 
-    colorList.push_back(Color(256,256,256,100));
-    colorList.push_back(Color(2,256,25,100));
-    colorList.push_back(Color(256,26,25,100));
-    colorList.push_back(Color(256,56,25,100));
-    colorList.push_back(Color(0,0,0,100));
+    colorList.push_back(Color(0,0,0,1000,1));
 
     period = 1000/fps;
     startTime = millis();
@@ -113,6 +110,7 @@ void loop()
     
     if (currentTime-startTime >= period)
     {
+        Serial.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
         Color color(0,0,0);
         digitalWrite(D9,HIGH);
         
@@ -125,12 +123,14 @@ void loop()
                 int deltaGreen = colorList.back().green - localColor.green;
                 int deltaBlue = colorList.back().blue - localColor.blue;
 
-                float weight = robjohn(colorTime, colorList.back().riseTime, 1);
+                float weight = robjohn(colorTime, colorList.back().riseTime, colorList.back().alpha);
 
                 color.red = static_cast<int>(localColor.red + (deltaRed * weight));
                 color.green = static_cast<int>(localColor.green + (deltaGreen * weight));
                 color.blue = static_cast<int>(localColor.blue + (deltaBlue * weight));
-
+                Serial.printf("    color rgb: %i %i %i \n", color.red, color.green, color.blue);
+                Serial.printf("     riseTime: %f \n", colorList.back().riseTime);
+                Serial.printf("       Weight: %f \n",weight);
                 setColor(color);
                 colorTime += period;
             }
@@ -147,10 +147,8 @@ void loop()
 
         startTime = currentTime;
 
-        Serial.print("\n\n\n\n\n\n\n\n\n\n\n");
-        Serial.println(colorList.back().red);
-        Serial.println(colorTime);
-        Serial.println(localColor.red);
+        Serial.printf("list back rgb: %i %i %i \n",colorList.back().red,colorList.back().green,colorList.back().blue);
+        Serial.printf("   color time: %i \n", colorTime);
 
     }
 }
