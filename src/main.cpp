@@ -1,45 +1,51 @@
 #include <Arduino.h>
 #include <WiFi.h>
 #include <WebServer.h>
+
 #include <vector>
-#include "Color.h"
-#include "Step.h"
-#include "SetColor.h"
-#include "SingleColor.h"
+
 #include "HandleRGB.h"
+#include "HandleRoot.h"
 
-// IPAddress staticip(192, 168, 0, 188);
-// IPAddress gateway(192, 168, 0, 1);
-// IPAddress subnet(255, 255, 240, 0);
-// IPAddress dns(71, 10, 216, 1);
+#include "Color.h"
+#include "SingleColor.h"
+#include "LoopingColor.h"
 
+#include "SetColor.h"
+#include "Step.h"
+
+//hardcoded passwords, proper solution is to start the board as an
+//access point, host a webpage where you input your password, then
+//switch to station mode and connect to wifi. Wifi creds can still 
+//be ripped from ram by an attacker in both scenarios, so this is
+//bad but the alternative isnt really better without encryption bullshit
 const String ssid = "chill tf out dog";
 const String password = "***REMOVED***";
 
 WebServer server(80);
 
-Color localColor(255,255,255); // KEEP OUT OF COLORLIST TODO:FIND A BETTER WAY AND REFECTOR THIS SHIT
-std::vector<Color> colorList;
+//Color instance to act as a buffer
+Color localColor(255,255,255);
 
+//The colorList vectors seperate looping animations from sequential animations
+std::vector<Color> sequentialColorList;
+std::vector<Color> loopingColorList;
+
+//time vars for maintaining framerate
 unsigned long startTime;
 unsigned long currentTime;
-int fps = 30; //desired framerate
-float period; //declaring here because i think i should define it later?????
+int fps = 30;
+float period = fps/1000;
 
 
-void handleRoot()
-{
-    server.send(200, "text/plain", "Connected");
-}
-
+//defining pins to be used
 int ledStripRed = D0;
 int ledStripGreen = D2;
 int ledStripBlue = D4;
 
-unsigned long startTime;
-unsigned long currentTime;
-int fps = 30; //desired framerate
-float period = fps/1000;
+int ledDebugRed = D9;
+int ledDebugGreen = D8;
+int ledDebugBlue = D7;
 
 void setup()
 {
@@ -47,12 +53,12 @@ void setup()
     Serial.begin(115200);
 
     //grab esp32 by the nuts and tell it that these arent serial pins
-    pinMode(D7,OUTPUT);
-    pinMode(D8,OUTPUT);
-    pinMode(D9,OUTPUT);
-    pinMode(D0,OUTPUT);
-    pinMode(D2,OUTPUT);
-    pinMode(D4,OUTPUT);
+    pinMode(ledStripRed,OUTPUT);
+    pinMode(ledStripGreen,OUTPUT);
+    pinMode(ledStripBlue,OUTPUT);
+    pinMode(ledDebugRed,OUTPUT);
+    pinMode(ledDebugGreen,OUTPUT);
+    pinMode(ledDebugBlue,OUTPUT);
 
 
     //ensure wifi is in station mode, start wifi logic
@@ -70,14 +76,15 @@ void setup()
         delay(1000);
     }
 
-    //endpoints defined and server started
-    server.on("/set_rgb", [&](){handleRGB(colorList, server);});
+    //endpoints defined and get server started
+    server.on("/set_rgb", [&](){handleRGB(sequentialColorList, loopingColorList, server);});
+    server.on("/", [&](){handleRoot(server);});
 
     server.begin();
 
 
     //logic for default color
-    colorList.push_back(Color(0,0,0,1000,1));
+    sequentialColorList.push_back(Color(0,0,0,1000,1));
 
 
     //end of setup so frame timer is started
@@ -92,6 +99,7 @@ void setup()
 }
 
 int colorTime = 0;
+int loopIterator = 0;
 
 void loop()
 {
@@ -101,10 +109,16 @@ void loop()
 
     if (currentTime-startTime >= period)
     {        
-        if (colorList.size() > 1)
+        if (sequentialColorList.size() > 1)
         {
-            digitalWrite(D8,HIGH);
-            handleSingleColor(period, colorTime, currentTime, startTime, localColor, colorList);
+            digitalWrite(ledDebugGreen,HIGH);
+            handleSingleColor(period, colorTime, currentTime, startTime, localColor, sequentialColorList);
+            setColor(localColor, ledStripRed, ledStripGreen, ledStripBlue);
+        }
+        else if (loopingColorList.size() > 1)
+        {
+            digitalWrite(ledDebugBlue,HIGH);
+            handleLoopingColor(loopIterator, period, colorTime, currentTime, startTime, localColor, loopingColorList);
             setColor(localColor, ledStripRed, ledStripGreen, ledStripBlue);
         }
 
@@ -113,9 +127,9 @@ void loop()
         /*
         vvvvvvvvvv D E B U G vvvvvvvvvv
         */
-        Serial.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-        digitalWrite(D9,HIGH);
-        Serial.printf("list back rgb: %i %i %i \n",colorList.back().red,colorList.back().green,colorList.back().blue);
-        Serial.printf("   color time: %i \n", colorTime);
+        // Serial.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+        // digitalWrite(D9,HIGH);
+        // Serial.printf("list back rgb: %i %i %i \n",colorList.back().red,colorList.back().green,colorList.back().blue);
+        // Serial.printf("   color time: %i \n", colorTime);
     }
 }
