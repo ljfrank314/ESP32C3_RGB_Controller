@@ -6,6 +6,6 @@
 #include "Step.h"
 #include <Arduino.h>
 
-void handleSingleColor(float& period, int& colorTime, unsigned long& currentTime, unsigned long& startTime, Color& localColor, std::vector<Color>& colorList);
+void handleSingleColor(float& period, int& colorTime, unsigned long& currentTime, unsigned long& startTime, Color& localColor, std::vector<Color>& sequentialColorList);
 
 #endif //SINGLECOLOR_U
