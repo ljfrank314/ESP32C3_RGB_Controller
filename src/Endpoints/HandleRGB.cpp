@@ -12,6 +12,7 @@ void handleRGB(std::vector<Color>& sequentionalColorList, std::vector<Color>& lo
             server.arg("blue").toInt(),
             server.arg("rise_time").toInt(),
             server.arg("alpha").toFloat());
+            
             sequentionalColorList.push_back(color);
 
             while(loopingColorList.size() > 1)
@@ -27,6 +28,7 @@ void handleRGB(std::vector<Color>& sequentionalColorList, std::vector<Color>& lo
             server.arg("blue").toInt(),
             server.arg("rise_time").toInt(),
             server.arg("alpha").toFloat());
+            
             loopingColorList.push_back(color);
 
             while(sequentionalColorList.size() > 1)

@@ -77,7 +77,12 @@ void setup()
     }
 
     //endpoints defined and get server started
-    server.on("/set_rgb", [&](){handleRGB(sequentialColorList, loopingColorList, server);});
+    server.on("/set_rgb",
+    [&](){
+        handleRGB(sequentialColorList, loopingColorList, server);
+        sequentialColorList.shrink_to_fit();
+        loopingColorList.shrink_to_fit();
+    });
     server.on("/", [&](){handleRoot(server);});
 
     server.begin();
