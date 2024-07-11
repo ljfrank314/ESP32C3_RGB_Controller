@@ -76,20 +76,24 @@ void setup()
         delay(1000);
     }
 
-    //endpoints defined and get server started
-    server.on("/set_rgb",
-    [&](){
-        handleRGB(sequentialColorList, loopingColorList, server);
-        sequentialColorList.shrink_to_fit();
-        loopingColorList.shrink_to_fit();
-    });
-    server.on("/", [&](){handleRoot(server);});
+    //endpoints defined and get server started 
+    server.on("/set_rgb", [&]()
+        {
+            //update color vectors with new data
+            handleRGB(sequentialColorList, loopingColorList, server);
 
+            //clean up unused memory from the vectors (might be the wrong way of going about this)
+            sequentialColorList.shrink_to_fit();
+            loopingColorList.shrink_to_fit();
+        }
+    );
+    server.on("/", [&](){handleRoot(server);});
     server.begin();
 
 
-    //logic for default color
+    //fill the vectors with placeholder colors
     sequentialColorList.push_back(Color(0,0,0,1000,1));
+    loopingColorList.push_back(Color(0,0,0,1000,1));
 
 
     //end of setup so frame timer is started
@@ -103,6 +107,8 @@ void setup()
     digitalWrite(D7,LOW);
 }
 
+//deciding to not have any loops inside loop(), makes keeping framerate correct easier
+//but i have to have these globals
 int colorTime = 0;
 int loopIterator = 0;
 
@@ -112,21 +118,26 @@ void loop()
 
     server.handleClient();
 
+    //frame counter
     if (currentTime-startTime >= period)
     {        
         if (sequentialColorList.size() > 1)
         {
             digitalWrite(ledDebugGreen,HIGH);
+
+            //set localColor to next frame color and write it to the rgb strip
             handleSingleColor(period, colorTime, currentTime, startTime, localColor, sequentialColorList);
             setColor(localColor, ledStripRed, ledStripGreen, ledStripBlue);
         }
         else if (loopingColorList.size() > 1)
         {
             digitalWrite(ledDebugBlue,HIGH);
+
             handleLoopingColor(loopIterator, period, colorTime, currentTime, startTime, localColor, loopingColorList);
             setColor(localColor, ledStripRed, ledStripGreen, ledStripBlue);
         }
 
+        //reset timer for framerate
         startTime = currentTime;
 
         /*
