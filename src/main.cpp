@@ -4,6 +4,8 @@
 #include <vector>
 #include "Color.h"
 #include "Step.h"
+#include "SetColor.h"
+#include "SingleColor.h"
 
 // IPAddress staticip(192, 168, 0, 188);
 // IPAddress gateway(192, 168, 0, 1);
@@ -26,14 +28,6 @@ unsigned long startTime;
 unsigned long currentTime;
 int fps = 30; //desired framerate
 float period; //declaring here because i think i should define it later?????
-
-void setColor(Color& color)
-{
-    analogWrite(ledStripRed, color.red);
-    analogWrite(ledStripGreen, color.green);
-    analogWrite(ledStripBlue, color.blue);
-    digitalWrite(D7,HIGH);
-}
 
 void handleRGB()
 {
@@ -111,38 +105,13 @@ void loop()
     if (currentTime-startTime >= period)
     {
         Serial.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-        Color color(0,0,0);
         digitalWrite(D9,HIGH);
         
         if (colorList.size() > 1)
         {
             digitalWrite(D8,HIGH);
-            if (colorTime < colorList.back().riseTime)
-            {
-                int deltaRed = colorList.back().red - localColor.red;
-                int deltaGreen = colorList.back().green - localColor.green;
-                int deltaBlue = colorList.back().blue - localColor.blue;
-
-                float weight = robjohn(colorTime, colorList.back().riseTime, colorList.back().alpha);
-
-                color.red = static_cast<int>(localColor.red + (deltaRed * weight));
-                color.green = static_cast<int>(localColor.green + (deltaGreen * weight));
-                color.blue = static_cast<int>(localColor.blue + (deltaBlue * weight));
-                Serial.printf("    color rgb: %i %i %i \n", color.red, color.green, color.blue);
-                Serial.printf("     riseTime: %f \n", colorList.back().riseTime);
-                Serial.printf("       Weight: %f \n",weight);
-                setColor(color);
-                colorTime += period;
-            }
-            else
-            {
-                localColor = colorList.back();
-                colorList.pop_back();
-                colorTime = 0;
-                digitalWrite(D9,LOW);
-                digitalWrite(D8,LOW);
-                digitalWrite(D7,LOW);
-            }
+            handleSingleColor(period, colorTime, currentTime, startTime, localColor, colorList);
+            setColor(localColor, ledStripRed, ledStripGreen, ledStripBlue);
         }
 
         startTime = currentTime;
