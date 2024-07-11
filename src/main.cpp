@@ -1,7 +1,6 @@
 #include <Arduino.h>
 #include <WiFi.h>
 #include <WebServer.h>
-
 #include <vector>
 
 #include "HandleRGB.h"
@@ -10,8 +9,8 @@
 #include "Color.h"
 #include "SingleColor.h"
 #include "LoopingColor.h"
-
 #include "SetColor.h"
+
 #include "Step.h"
 
 //hardcoded passwords, proper solution is to start the board as an
