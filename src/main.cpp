@@ -6,6 +6,7 @@
 #include "Step.h"
 #include "SetColor.h"
 #include "SingleColor.h"
+#include "HandleRGB.h"
 
 // IPAddress staticip(192, 168, 0, 188);
 // IPAddress gateway(192, 168, 0, 1);
@@ -29,25 +30,6 @@ unsigned long currentTime;
 int fps = 30; //desired framerate
 float period; //declaring here because i think i should define it later?????
 
-void handleRGB()
-{
-    if (server.hasArg("red") && server.hasArg("green") && server.hasArg("blue") && server.hasArg("rise_time") && server.hasArg("alpha"))
-    {
-        Color color(
-            server.arg("red").toInt(),
-            server.arg("green").toInt(),
-            server.arg("blue").toInt(),
-            server.arg("rise_time").toInt(),
-            server.arg("alpha").toFloat());
-        colorList.push_back(color);
-        server.send(200, "text/plain", "Command Recieved \n");
-    }
-    else
-    {
-        server.send(400, "text/plain", "shit. \n");
-    }
-
-}
 
 void handleRoot()
 {
@@ -56,22 +38,25 @@ void handleRoot()
 
 void setup()
 {
+    //serial of course
     Serial.begin(115200);
-    pinMode(D7,OUTPUT); //this looks like trash test test
+
+    //grab esp32 by the nuts and tell it that these arent serial pins
+    pinMode(D7,OUTPUT);
     pinMode(D8,OUTPUT);
-    pinMode(D9,OUTPUT); //github
+    pinMode(D9,OUTPUT);
     pinMode(D0,OUTPUT);
     pinMode(D2,OUTPUT);
     pinMode(D4,OUTPUT);
 
 
-
-    //WiFi.config(staticip,gateway,subnet,dns);
-    digitalWrite(D8,HIGH);
+    //ensure wifi is in station mode, start wifi logic
     WiFi.mode(WIFI_STA);
     WiFi.begin(ssid,password);
+
     digitalWrite(D7,HIGH);
 
+    //flash green debug led until wifi is connected
     while (WiFi.status() != WL_CONNECTED)
     {
         digitalWrite(D8,HIGH);
@@ -79,19 +64,27 @@ void setup()
         digitalWrite(D8,LOW);
         delay(1000);
     }
-    
-    server.on("/set_rgb", handleRGB);
 
+    //start server, define endpoints
+    server.on("/set_rgb", handleRGB(colorList, server));
+    server.on("/set_rgb", )
+    server.begin();
+
+
+    //logic for default color
+    colorList.push_back(Color(0,0,0,1000,1));
+
+
+    //start framerate timer and frame period
+    period = 1000/fps;
+    startTime = millis();
+
+    /*
+    vvvvvvvvvv D E B U G vvvvvvvvvv
+    */
     digitalWrite(D9,LOW);
     digitalWrite(D8,LOW);
     digitalWrite(D7,LOW);
-
-    server.begin();
-
-    colorList.push_back(Color(0,0,0,1000,1));
-
-    period = 1000/fps;
-    startTime = millis();
 }
 
 int colorTime = 0;
@@ -99,14 +92,11 @@ int colorTime = 0;
 void loop()
 {
     currentTime = millis();
+
     server.handleClient();
 
-    
     if (currentTime-startTime >= period)
-    {
-        Serial.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-        digitalWrite(D9,HIGH);
-        
+    {        
         if (colorList.size() > 1)
         {
             digitalWrite(D8,HIGH);
@@ -116,8 +106,12 @@ void loop()
 
         startTime = currentTime;
 
+        /*
+        vvvvvvvvvv D E B U G vvvvvvvvvv
+        */
+        Serial.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+        digitalWrite(D9,HIGH);
         Serial.printf("list back rgb: %i %i %i \n",colorList.back().red,colorList.back().green,colorList.back().blue);
         Serial.printf("   color time: %i \n", colorTime);
-
     }
 }
