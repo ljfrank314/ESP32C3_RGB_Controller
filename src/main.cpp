@@ -18,10 +18,6 @@ const String password = "***REMOVED***";
 
 WebServer server(80);
 
-int ledStripRed = D0;
-int ledStripGreen = D2;
-int ledStripBlue = D4;
-
 Color localColor(255,255,255); // KEEP OUT OF COLORLIST TODO:FIND A BETTER WAY AND REFECTOR THIS SHIT
 std::vector<Color> colorList;
 
@@ -35,6 +31,15 @@ void handleRoot()
 {
     server.send(200, "text/plain", "Connected");
 }
+
+int ledStripRed = D0;
+int ledStripGreen = D2;
+int ledStripBlue = D4;
+
+unsigned long startTime;
+unsigned long currentTime;
+int fps = 30; //desired framerate
+float period = fps/1000;
 
 void setup()
 {
@@ -65,9 +70,9 @@ void setup()
         delay(1000);
     }
 
-    //start server, define endpoints
-    server.on("/set_rgb", handleRGB(colorList, server));
-    server.on("/set_rgb", )
+    //endpoints defined and server started
+    server.on("/set_rgb", [&](){handleRGB(colorList, server);});
+
     server.begin();
 
 
@@ -75,8 +80,7 @@ void setup()
     colorList.push_back(Color(0,0,0,1000,1));
 
 
-    //start framerate timer and frame period
-    period = 1000/fps;
+    //end of setup so frame timer is started
     startTime = millis();
 
     /*
