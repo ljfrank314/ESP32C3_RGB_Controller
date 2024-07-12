@@ -7,6 +7,6 @@
 #include <vector>
 #include "Color.h"
 
-void handleRGB(std::vector<Color>& sequentionalColorList, std::vector<Color>& loopingColorList, WebServer& server);
+void handleRGB(std::vector<Color>& sequentionalColorList, std::vector<Color>& loopingColorList, Color& currentColor, Color interruptColor, WebServer& server);
 
 #endif // HANDLERGB_H

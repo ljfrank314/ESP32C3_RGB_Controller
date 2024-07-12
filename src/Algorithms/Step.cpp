@@ -9,6 +9,7 @@
 
 float robjohn(float t, float d, float a)
 {
+    t=t+0.0001; //prevent overflow, t CANNOT equal 0
     float pwr = pow( t , a );
     return pwr/( pwr + pow( (d-t) , a ) );
 }
