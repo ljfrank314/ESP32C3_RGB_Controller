@@ -4,8 +4,9 @@
 #include <vector>
 #include "Color.h"
 #include "Step.h"
+#include "SetColor.h"
 #include <Arduino.h>
 
-void handleLoopingColor(int& loopIterator, float& period, int& colorTime, unsigned long& currentTime, unsigned long& startTime, Color& localColor, std::vector<Color>& loopingColorList);
+Color handleLoopingColor(int& loopIterator, int& period, int& colorTime, unsigned long& currentTime, unsigned long& startTime, Color& currentColor, std::vector<Color>& loopingColorList);
 
 #endif //LOOPINGCOLOR_U

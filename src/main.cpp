@@ -24,7 +24,8 @@ const String password = "***REMOVED***";
 WebServer server(80);
 
 //Color instance to act as a buffer
-Color localColor(255,255,255);
+Color currentColor(0,0,0);
+Color iteratorColor(0,0,0);
 
 //The colorList vectors seperate looping animations from sequential animations
 std::vector<Color> sequentialColorList;
@@ -33,8 +34,8 @@ std::vector<Color> loopingColorList;
 //time vars for maintaining framerate
 unsigned long startTime;
 unsigned long currentTime;
-int fps = 30;
-float period = fps/1000;
+int fps = 60;
+int period = 1000/fps;
 
 
 //defining pins to be used
@@ -80,7 +81,7 @@ void setup()
         [&]()
         {
             //update color vectors with new data
-            handleRGB(sequentialColorList, loopingColorList, server);
+            handleRGB(sequentialColorList, loopingColorList, currentColor, iteratorColor, server);
 
             //clean up unused memory from the vectors (might be the wrong way of going about this)
             sequentialColorList.shrink_to_fit();
@@ -88,12 +89,27 @@ void setup()
         }
     );
     server.on("/", [&](){handleRoot(server);});
+    server.on("/fps",
+        [&]()
+        {
+            if (server.hasArg("fps"))
+            {
+                fps = server.arg("fps").toInt();
+                period = 1000/fps;
+                server.send(200, "text/plain", "fps set successfully");
+            }
+            else
+            {
+                server.send(400,"text/plain", "Bad query");
+            }
+        }
+    );
     server.begin();
 
 
     //fill the vectors with placeholder colors
-    sequentialColorList.push_back(Color(0,0,0,1000,1));
-    loopingColorList.push_back(Color(0,0,0,1000,1));
+    sequentialColorList.push_back(Color(255,255,255,1000,1));
+    sequentialColorList.push_back(Color(255,255,255,5000,3));
 
 
     //end of setup so frame timer is started
@@ -112,31 +128,45 @@ void setup()
 int colorTime = 0;
 int loopIterator = 0;
 
+
+
 void loop()
 {
+    float frameTimer = micros(); // <<< DEBUG
+
+    bool rgbChanged = false;
+
     currentTime = millis();
 
     server.handleClient();
 
     //frame counter
     if (currentTime-startTime >= period)
-    {        
-        if (sequentialColorList.size() > 1)
+    {
+        if (sequentialColorList.size() > 1) //not a fan of needing 1 element in here at all times, might change logic
         {
             digitalWrite(ledDebugGreen,HIGH);
 
-            //set localColor to next frame color and write it to the rgb strip
-            handleSingleColor(period, colorTime, currentTime, startTime, localColor, sequentialColorList);
-            setColor(localColor, ledStripRed, ledStripGreen, ledStripBlue);
+            rgbChanged = true;
+
+            //set currentColor to next frame color and write it to the rgb strip
+            iteratorColor = handleSingleColor(period, colorTime, currentTime, startTime, currentColor, sequentialColorList);
+
+            loopIterator = 0; //housekeeping
+            setColor(iteratorColor, ledStripRed, ledStripGreen, ledStripBlue);
         }
         
-        else if (loopingColorList.size() > 1)
+        else if (!loopingColorList.empty())
         {
             digitalWrite(ledDebugBlue,HIGH);
 
-            handleLoopingColor(loopIterator, period, colorTime, currentTime, startTime, localColor, loopingColorList);
-            setColor(localColor, ledStripRed, ledStripGreen, ledStripBlue);
+            rgbChanged = true;
+
+            iteratorColor = handleLoopingColor(loopIterator, period, colorTime, currentTime, startTime, currentColor, loopingColorList);
+            setColor(iteratorColor, ledStripRed, ledStripGreen, ledStripBlue);
         }
+        //im just getting this working so i can write the webapp and get a beta out, this is fucking atrocious.
+        //currentColor variable really gets sent through the wringer every 8 milliseconds
 
         //reset timer for framerate
         startTime = currentTime;
@@ -144,9 +174,20 @@ void loop()
         /*
         vvvvvvvvvv D E B U G vvvvvvvvvv
         */
-        // Serial.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+        // if (debugIterator >= 16)
+        // {
+            // debugIterator = 0;
+        frameTimer = (micros() - frameTimer)/1000.0F;
+        Serial.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+        Serial.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
         // digitalWrite(D9,HIGH);
-        // Serial.printf("list back rgb: %i %i %i \n",colorList.back().red,colorList.back().green,colorList.back().blue);
-        // Serial.printf("   color time: %i \n", colorTime);
+        Serial.printf("Sequential list size: %i \nLooping list size: %i \nIterator: %i \nFrame time: %f \n",
+        sequentialColorList.size(),
+        loopingColorList.size(),
+        loopIterator,
+        frameTimer);
+        Serial.printf("iColor R(%i) G(%i) B(%i) RT: %i A: %f\n", iteratorColor.red, iteratorColor.green, iteratorColor.blue, iteratorColor.riseTime, iteratorColor.alpha);
+        Serial.printf("cColor R(%i) G(%i) B(%i) RT: %i A: %f", currentColor.red, currentColor.green, currentColor.blue, currentColor.riseTime, currentColor.alpha);
+        // }
     }
 }
