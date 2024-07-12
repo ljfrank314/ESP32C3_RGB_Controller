@@ -22,7 +22,7 @@ void handleLoopingColor(int& i, float &period, int &colorTime, unsigned long &cu
     else
     {
         localColor = loopingColorList.at(i);
-        if (i < loopingColorList.size()) i++;
+        if (i < (loopingColorList.size()-1)) i++;
         else i = 0;
         colorTime = 0;
     }
