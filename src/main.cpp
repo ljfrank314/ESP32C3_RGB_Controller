@@ -76,7 +76,8 @@ void setup()
     }
 
     //endpoints defined and get server started 
-    server.on("/set_rgb", [&]()
+    server.on("/set_rgb",
+        [&]()
         {
             //update color vectors with new data
             handleRGB(sequentialColorList, loopingColorList, server);
@@ -128,6 +129,7 @@ void loop()
             handleSingleColor(period, colorTime, currentTime, startTime, localColor, sequentialColorList);
             setColor(localColor, ledStripRed, ledStripGreen, ledStripBlue);
         }
+        
         else if (loopingColorList.size() > 1)
         {
             digitalWrite(ledDebugBlue,HIGH);
