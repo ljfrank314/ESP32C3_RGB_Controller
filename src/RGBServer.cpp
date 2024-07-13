@@ -1,10 +1,20 @@
 #include "RGBServer.h"
 
-LocalServer::LocalServer(int port)
-{
-}
+RGBServer::RGBServer(int port)
+: server(port)
+{}
 
-int LocalServer::update()
+int RGBServer::update()
 {
     return 0;
+}
+
+void RGBServer::start()
+{
+    server.begin();
+}
+
+void RGBServer::kill()
+{
+    server.close();
 }
