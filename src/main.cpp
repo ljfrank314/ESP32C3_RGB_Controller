@@ -101,9 +101,6 @@ void setup()
 
 //deciding to not have any loops inside loop(), makes keeping framerate correct easier
 //but i have to have these globals
-int colorTime = 0;
-int loopIterator = 0;
-
 void loop()
 {
     float frameTimer = micros(); // <<< DEBUG
