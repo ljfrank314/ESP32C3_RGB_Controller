@@ -3,8 +3,11 @@
 
 #include "Color.h"
 #include <deque>
-#include <WebServer.h>
 
-
+class RGBQueue
+{
+    RGBQueue();
+    insertColor();
+};
 
 #endif
