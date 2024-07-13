@@ -10,6 +10,13 @@
 
 #include "Step.h"
 
+/*
+* TODO:
+* Switch to ledc for all led writes
+* write color array and deque implementation
+* touch grass / shower / find love (low priority)
+*/
+
 //hardcoded passwords, proper solution is to start the board as an
 //access point, host a webpage where you input your password, then
 //switch to station mode and connect to wifi. Wifi creds can still 
@@ -40,10 +47,10 @@ void setup()
     //serial of course
     Serial.begin(115200);
 
-    //grab esp32 by the nuts and tell it that these arent serial pins
-    pinMode(ledStripRed,OUTPUT);
-    pinMode(ledStripGreen,OUTPUT);
-    pinMode(ledStripBlue,OUTPUT);
+    //based ledc implementation
+    ledcAttachPin(ledStripRed, 0);
+    ledcAttachPin(ledStripBlue, 0);
+
     pinMode(ledDebugRed,OUTPUT);
     pinMode(ledDebugGreen,OUTPUT);
     pinMode(ledDebugBlue,OUTPUT);
@@ -64,8 +71,8 @@ void setup()
     }
 
     //endpoints defined and get server started 
-    server.on("/set_rgb",[&](){});
-    server.on("/", [&](){handleRoot(server);});
+    server.on("/set_rgb",[&](){/*rgb code here*/});
+    server.on("/", [&](){/*root code here*/});
     server.on("/fps",
         [&]()
         {
