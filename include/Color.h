@@ -8,11 +8,12 @@ public:
     int red;
     int green;
     int blue;
-    int riseTime;
-    float alpha;
+    const int riseTime;
+    const float alpha;
+    const bool looping;
 
-    Color(int r, int g, int b, int t, float a);
-    Color(int r, int g, int b);
+    Color(int red, int green, int blue, int riseTime, float alpha, bool looping);
+    Color(int red, int green, int blue);
 
     bool operator==(const Color& other) const;
     bool operator!=(const Color& other) const;

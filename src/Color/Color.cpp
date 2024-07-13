@@ -1,9 +1,12 @@
 #include "Color.h"
 
-Color::Color(int r, int g, int b, int t, float a) : red(r), green(g), blue(b), riseTime(t), alpha(a) {}
-Color::Color(int r, int g, int b) : red(r), green(g), blue(b), riseTime(1000.f), alpha(1.f) {}
+Color::Color(int red, int green, int blue, int riseTime, float alpha, bool looping)
+: red(red), green(green), blue(blue), riseTime(riseTime), alpha(alpha), looping(looping){}
 
-bool Color::operator==(const Color& other) const
+Color::Color(int red, int green, int blue)
+: red(red), green(green), blue(blue), riseTime(1000), alpha(3), looping(false){}
+
+bool Color::operator==(const Color &other) const
 {
     return (red == other.red && blue == other.blue && green == other.green);
 }
