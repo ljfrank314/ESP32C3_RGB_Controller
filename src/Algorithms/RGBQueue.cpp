@@ -1,18 +1,23 @@
 #include "RGBQueue.h"
 
 RGBQueue::RGBQueue()
-: lunchLine(), animationDeltas(), iterator(0), iteratorMax(0)
+: lunchLine(), animationDeltas(), iterator(0), iteratorMax(0), maxSize(50)
 {
     setZeros();
 }
 
 void RGBQueue::addColor(Color color)
 {
+    if (iteratorMax + 1 > maxSize) //idk if this is faster than lunchLine.size();
+    {
+        lunchLine.pop_front();
+    }
     if (!color.looping)
     {
         lunchLine.clear();
     }
-    lunchLine.push
+    lunchLine.push_back(color);
+    setIteratorMax();
 }
 
 void RGBQueue::setRGB(Color color)
@@ -22,7 +27,7 @@ void RGBQueue::setRGB(Color color)
     animationDeltas[1][2] = color.blue;
 }
 
-int RGBQueue::loadArray()
+void RGBQueue::loadArray()
 {
     if (!lunchLine.empty())
     {
@@ -36,38 +41,23 @@ int RGBQueue::loadArray()
             animationDeltas[2][1] = lunchLine.front().green;
             animationDeltas[2][2] = lunchLine.front().blue;
             lunchLine.pop_front();
-
-            return 0;
+        }
+        else
+        {
+            animationDeltas[2][0] = lunchLine.at(iterator).red;
+            animationDeltas[2][1] = lunchLine.at(iterator).green;
+            animationDeltas[2][2] = lunchLine.at(iterator).blue;
         }
 
-        animationDeltas[2][0] = lunchLine.at(iterator).red;
-        animationDeltas[2][1] = lunchLine.at(iterator).green;
-        animationDeltas[2][2] = lunchLine.at(iterator).blue;
 
         incrementIterator(1);
     } 
 }
 
-int RGBQueue::getRed()
+void RGBQueue::reset() //can potentially use to seamlessly transition from one loop to another
 {
-    return 0;
-}
-
-int RGBQueue::getGreen()
-{
-    return 0;
-}
-
-int RGBQueue::getBlue()
-{
-    return 0;
-}
-
-void RGBQueue::reset()
-{
-    setZeros();
     lunchLine.clear();
-    lunchLine.shrink_to_fit();
+    lunchLine.shrink_to_fit(); //not even real i have no real memory control this is a polite request
 }
 
 void RGBQueue::incrementIterator(int delta)
