@@ -8,24 +8,23 @@
 class RGBQueue
 {
 public:
-
     int animationDeltas[3][3];
+
     RGBQueue();
 
     void addColor(Color color);
 
-    int loadArray();
+    void loadArray();
 
     void setRGB(Color color);
-    int getRed();
-    int getGreen();
-    int getBlue();
 
     void reset();
 
 private:
     int iterator;
     int iteratorMax;
+
+    int maxSize;
     
     /// @brief Deque of the queued colors
     std::deque<Color> lunchLine;
