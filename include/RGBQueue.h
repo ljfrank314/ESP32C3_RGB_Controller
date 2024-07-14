@@ -8,12 +8,15 @@
 class RGBQueue
 {
 public:
+
+    int animationDeltas[3][3];
     RGBQueue();
 
     void addColor(Color color);
 
-    void loadArray();
+    int loadArray();
 
+    void setRGB(Color color);
     int getRed();
     int getGreen();
     int getBlue();
@@ -22,15 +25,16 @@ public:
 
 private:
     int iterator;
+    int iteratorMax;
     
     /// @brief Deque of the queued colors
     std::deque<Color> lunchLine;
 
-    /// @brief Subarrays hold RGB values, subarray represents past, present, and future
-    int animationDeltas[3][3]= {
-        {0,0,0},
-        {0,0,0},
-        {0,0,0}};
+    void incrementIterator(int delta);
+
+    void setIteratorMax();
+
+    void setZeros();
 };
 
 #endif
