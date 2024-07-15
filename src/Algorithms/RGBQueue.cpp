@@ -8,7 +8,7 @@ RGBQueue::RGBQueue()
 
 void RGBQueue::addColor(Color color)
 {
-    if (iteratorMax + 1 > maxSize) //idk if this is faster than lunchLine.size();
+    if ((iteratorMax + 1) > maxSize) //idk if this is faster than lunchLine.size();
     {
         lunchLine.pop_front();
     }
@@ -47,10 +47,8 @@ void RGBQueue::loadArray()
             animationDeltas[2][0] = lunchLine.at(iterator).red;
             animationDeltas[2][1] = lunchLine.at(iterator).green;
             animationDeltas[2][2] = lunchLine.at(iterator).blue;
+            incrementIterator(1);
         }
-
-
-        incrementIterator(1);
     } 
 }
 
