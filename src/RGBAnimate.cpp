@@ -1,5 +1,6 @@
 #include "RGBAnimate.h"
 
-RGBAnimate::RGBAnimate()
+RGBAnimate::RGBAnimate(int& period, int& colorTime, )
 {
+
 }
