@@ -2,7 +2,6 @@
 #define RGBQUEUE_H
 
 #include "Color.h"
-#include <deque>
 #include <inttypes.h>
 
 class RGBQueue
@@ -12,28 +11,16 @@ public:
 
     RGBQueue();
 
-    void addColor(Color color);
+    Animation animation;
+
+    void addColor(int index, int red, int green, int blue, int riseTime, float alpha, bool looping);
 
     void loadArray();
 
-    void setRGB(Color color);
-
-    void reset();
+    void animateRGB(int red, int green, int blue);
 
 private:
     int iterator;
-    int iteratorMax;
-
-    int maxSize;
-    
-    /// @brief Deque of the queued colors
-    std::deque<Color> lunchLine;
-
-    void incrementIterator(int delta);
-
-    void setIteratorMax();
-
-    void setZeros();
 };
 
 #endif
