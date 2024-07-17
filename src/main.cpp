@@ -47,9 +47,6 @@ RGBConfig ledConfig(0, 1, 2, 5000);
 
 void setup()
 {
-    //serial of course
-    Serial.begin(115200);
-
     ledConfig.attachRedPin(ledStripRed);
     ledConfig.attachGreenPin(ledStripGreen);
     ledConfig.attachBluePin(ledStripBlue);
