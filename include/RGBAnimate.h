@@ -2,13 +2,13 @@
 #define RGBANIMATE_U
 
 #include <Arduino.h>
+#include "RGBQueue.h"
+#include "RGBConfig.h"
 
 class RGBAnimate
 {
 public:
-    RGBAnimate();
-private:
-    unsigned long time; 
+    RGBAnimate(int& period, int& time, RGBQueue& queue, RGBConfig& config);
 };
 
 #endif
