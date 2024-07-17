@@ -1,7 +1,6 @@
 #ifndef RGBCONFIG_H
 #define RGBCONFIG_H
 
-#include "Color.h"
 #include <inttypes.h>
 
 class RGBConfig
@@ -26,7 +25,7 @@ public:
     /// @param green Duty cycle for green
     /// @param blue Duty cycle for blue
     /// @return True if the duty cycles were within the set range
-    bool setRGB(uint32_t redDuty, uint32_t greenDuty, uint32_t blueDuty);
+    void setRGB(uint32_t redDuty, uint32_t greenDuty, uint32_t blueDuty);
 
     /// @brief Attach pin to red channel
     /// @param pin 

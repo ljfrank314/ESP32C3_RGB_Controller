@@ -2,7 +2,7 @@
 #define RGBQUEUE_H
 
 #include "Color.h"
-#include <inttypes.h>
+#include "Step.h"
 
 class RGBQueue
 {
@@ -19,7 +19,6 @@ public:
 
     void animateRGB(int red, int green, int blue);
 
-private:
     int iterator;
 };
 
