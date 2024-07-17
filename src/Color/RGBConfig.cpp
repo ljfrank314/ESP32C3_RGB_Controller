@@ -2,7 +2,7 @@
 #include <cmath>
 #include <Arduino.h>
 
-RGBConfig::RGBConfig(uint8_t redChannel, uint8_t greenChannel, uint8_t blueChannel, uint32_t frequency)
+RGBConfig::RGBConfig(uint8_t redChannel, uint8_t greenChannel, uint8_t blueChannel, uint32_t frequency, uint8_t resolution)
 : redChannel(redChannel), greenChannel(greenChannel), blueChannel(blueChannel), frequency(frequency), resolution(resolution)
 {
     ledcSetup(redChannel, frequency, resolution);
