@@ -1,8 +1,6 @@
 #ifndef RGBCONFIG_H
 #define RGBCONFIG_H
 
-#include <inttypes.h>
-
 class RGBConfig
 {
 public:

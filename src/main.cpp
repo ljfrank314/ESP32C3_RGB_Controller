@@ -4,11 +4,10 @@
 #include <vector>
 
 #include "Color.h"
-#include "SingleColor.h"
-#include "LoopingColor.h"
-#include "SetColor.h"
-
-#include "Step.h"
+#include "RGBServer.h"
+#include "RGBQueue.h"
+#include "RGBAnimate.h"
+#include "RGBConfig.h"
 
 /*
 * TODO:
@@ -25,7 +24,7 @@
 const String ssid = "chill tf out dog";
 const String password = "***REMOVED***";
 
-WebServer server(80);
+RGBServer server(80);
 
 //time vars for maintaining framerate
 unsigned long startTime;
@@ -34,22 +33,26 @@ int fps = 60;
 int period = 1000/fps;
 
 //defining pins to be used
-int ledStripRed = D0;
-int ledStripGreen = D2;
-int ledStripBlue = D4;
+uint8_t ledStripRed = D0;
+uint8_t ledStripGreen = D2;
+uint8_t ledStripBlue = D4;
 
-int ledDebugRed = D9;
-int ledDebugGreen = D8;
-int ledDebugBlue = D7;
+uint8_t ledDebugRed = D9;
+uint8_t ledDebugGreen = D8;
+uint8_t ledDebugBlue = D7;
+
+
+RGBQueue queue;
+RGBConfig ledConfig(0, 1, 2, 5000);
 
 void setup()
 {
     //serial of course
     Serial.begin(115200);
 
-    //based ledc implementation
-    ledcAttachPin(ledStripRed, 0);
-    ledcAttachPin(ledStripBlue, 0);
+    ledConfig.attachRedPin(ledStripRed);
+    ledConfig.attachGreenPin(ledStripGreen);
+    ledConfig.attachBluePin(ledStripBlue);
 
     pinMode(ledDebugRed,OUTPUT);
     pinMode(ledDebugGreen,OUTPUT);
@@ -60,33 +63,15 @@ void setup()
     WiFi.mode(WIFI_STA);
     WiFi.begin(ssid,password);
 
-    digitalWrite(D7,HIGH);
+    digitalWrite(ledDebugBlue,HIGH);
 
     //flash green debug led until wifi is connected
     while (WiFi.status() != WL_CONNECTED){
-        digitalWrite(D8,HIGH);
+        digitalWrite(ledDebugGreen,HIGH);
         delay(100);
-        digitalWrite(D8,LOW);
+        digitalWrite(ledDebugGreen,LOW);
         delay(1000);
     }
-
-    //endpoints defined and get server started 
-    server.on("/set_rgb",[&](){/*rgb code here*/});
-    server.on("/", [&](){/*root code here*/});
-    server.on("/fps",
-        [&]()
-        {
-            if (server.hasArg("fps")) {
-                fps = server.arg("fps").toInt();
-                period = 1000/fps;
-                server.send(200, "text/plain", "fps set successfully");
-            }
-            else {
-                server.send(400,"text/plain", "Bad query");
-            }
-        }
-    );
-    server.begin();
 
     //end of setup so frame timer is started
     startTime = millis();
@@ -94,23 +79,31 @@ void setup()
     /*
     vvvvvvvvvv D E B U G vvvvvvvvvv
     */
-    digitalWrite(D9,LOW);
-    digitalWrite(D8,LOW);
-    digitalWrite(D7,LOW);
+    digitalWrite(ledDebugRed,LOW);
+    digitalWrite(ledDebugGreen,LOW);
+    digitalWrite(ledDebugBlue,LOW);
+
+    ledConfig.attachRedPin(ledStripRed);
+    ledConfig.attachGreenPin(ledStripGreen);
+    ledConfig.attachBluePin(ledStripBlue);
+    
 }
 
 //deciding to not have any loops inside loop(), makes keeping framerate correct easier
 //but i have to have these globals
+unsigned long colorTime = 0;
+
 void loop()
 {
-    float frameTimer = micros(); // <<< DEBUG
     currentTime = millis();
 
-    server.handleClient();
+    server.update(queue);
 
     //frame counter
     if (currentTime-startTime >= period)
     {
+        RGBAnimate(period, colorTime, queue, ledConfig);
 
+        startTime = currentTime;
     }
 }

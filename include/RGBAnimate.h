@@ -8,7 +8,7 @@
 class RGBAnimate
 {
 public:
-    RGBAnimate(int& period, int& time, RGBQueue& queue, RGBConfig& config);
+    RGBAnimate(int& period, unsigned long& time, RGBQueue& queue, RGBConfig& config);
 };
 
 #endif

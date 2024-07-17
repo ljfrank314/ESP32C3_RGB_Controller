@@ -1,6 +1,6 @@
 #include "RGBAnimate.h"
 
-RGBAnimate::RGBAnimate(int &period, int &time, RGBQueue& queue, RGBConfig& config)
+RGBAnimate::RGBAnimate(int &period, unsigned long &time, RGBQueue& queue, RGBConfig& config)
 {
     int color[] = {0,0,0};
 
