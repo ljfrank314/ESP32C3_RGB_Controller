@@ -19,7 +19,7 @@ struct Animation
         Color() : red(0), green(0), blue(0), riseTime(0), alpha(0), looping(0) {};
     } frames[100];
 
-    Animation(){};
+    Animation() {}
 
     void setFrame(int iterator, int red, int green, int blue, int riseTime, float alpha, bool looping);
     void setFrame(int iterator);

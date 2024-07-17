@@ -10,8 +10,6 @@ bool Animation::Color::operator!=(const Color &other) const
     return !(red == other.red && blue == other.blue && green == other.green);
 }
 
-Animation::Animation(){}
-
 void Animation::setFrame(int iterator, int red, int green, int blue, int riseTime, float alpha, bool looping) 
 {
     frames[iterator].red = red;
