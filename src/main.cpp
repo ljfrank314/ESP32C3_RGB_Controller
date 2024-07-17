@@ -41,9 +41,7 @@ uint8_t ledDebugRed = D9;
 uint8_t ledDebugGreen = D8;
 uint8_t ledDebugBlue = D7;
 
-
-RGBQueue queue;
-RGBConfig ledConfig(0, 1, 2, 5000);
+RGBConfig ledConfig(uint8_t(0), uint8_t(1), uint8_t(3), uint32_t(5000), uint8_t(9));
 
 void setup()
 {
@@ -80,11 +78,14 @@ void setup()
     digitalWrite(ledDebugGreen,LOW);
     digitalWrite(ledDebugBlue,LOW);
 
-    ledConfig.attachRedPin(ledStripRed);
-    ledConfig.attachGreenPin(ledStripGreen);
-    ledConfig.attachBluePin(ledStripBlue);
-    
+    ledConfig.attachRedPin(ledDebugRed);
+    ledConfig.attachGreenPin(ledDebugGreen);
+    ledConfig.attachBluePin(ledDebugBlue);
+
+    server.start();
 }
+
+RGBQueue queue;
 
 //deciding to not have any loops inside loop(), makes keeping framerate correct easier
 //but i have to have these globals

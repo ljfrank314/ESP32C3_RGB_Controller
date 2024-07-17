@@ -17,7 +17,7 @@ public:
     /// @param greenChannel 
     /// @param blueChannel 
     /// @param frequency 
-    RGBConfig(uint8_t redChannel, uint8_t greenChannel, uint8_t blueChannel, uint32_t frequency);
+    RGBConfig(uint8_t redChannel, uint8_t greenChannel, uint8_t blueChannel, uint32_t frequency, uint8_t resolution);
 
     /// @brief Sets the red, green, and blue channels to the specified duty cycles
     /// @param red Duty cycle for red
