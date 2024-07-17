@@ -2,7 +2,7 @@
 #define RGBSERVER_H
 
 #include <WebServer.h>
-#include "Color.h"
+#include "RGBQueue.h"
 
 class RGBServer
 {
@@ -13,7 +13,7 @@ public:
 
     /// @brief Handle clients and whatnot
     /// @return Returns 0 (in the future might throw debug codes idk dont taze me bro)
-    int update();
+    void update(RGBQueue& queue);
 
     /// @brief Start the server
     void start();
