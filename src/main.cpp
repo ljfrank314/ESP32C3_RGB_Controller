@@ -24,7 +24,7 @@
 const String ssid = "chill tf out dog";
 const String password = "***REMOVED***";
 
-RGBServer server(80);
+// RGBServer server(80);
 
 //time vars for maintaining framerate
 unsigned long startTime;
@@ -41,13 +41,14 @@ uint8_t ledDebugRed = D9;
 uint8_t ledDebugGreen = D8;
 uint8_t ledDebugBlue = D7;
 
-RGBConfig ledConfig(uint8_t(0), uint8_t(1), uint8_t(3), uint32_t(5000), uint8_t(9));
+RGBConfig* ledConfig = new RGBConfig(uint8_t(0), uint8_t(1), uint8_t(3), uint32_t(5000), uint8_t(9));
+RGBQueue* queue = new RGBQueue();
 
 void setup()
 {
-    ledConfig.attachRedPin(ledStripRed);
-    ledConfig.attachGreenPin(ledStripGreen);
-    ledConfig.attachBluePin(ledStripBlue);
+    ledConfig->attachRedPin(ledStripRed);
+    ledConfig->attachGreenPin(ledStripGreen);
+    ledConfig->attachBluePin(ledStripBlue);
 
     pinMode(ledDebugRed,OUTPUT);
     pinMode(ledDebugGreen,OUTPUT);
@@ -55,18 +56,18 @@ void setup()
 
 
     //ensure wifi is in station mode, start wifi logic
-    WiFi.mode(WIFI_STA);
-    WiFi.begin(ssid,password);
+    // WiFi.mode(WIFI_STA);
+    // WiFi.begin(ssid,password);
 
     digitalWrite(ledDebugBlue,HIGH);
 
     //flash green debug led until wifi is connected
-    while (WiFi.status() != WL_CONNECTED){
-        digitalWrite(ledDebugGreen,HIGH);
-        delay(100);
-        digitalWrite(ledDebugGreen,LOW);
-        delay(1000);
-    }
+    // while (WiFi.status() != WL_CONNECTED){
+    //     digitalWrite(ledDebugGreen,HIGH);
+    //     delay(100);
+    //     digitalWrite(ledDebugGreen,LOW);
+    //     delay(1000);
+    // }
 
     //end of setup so frame timer is started
     startTime = millis();
@@ -78,14 +79,13 @@ void setup()
     digitalWrite(ledDebugGreen,LOW);
     digitalWrite(ledDebugBlue,LOW);
 
-    ledConfig.attachRedPin(ledDebugRed);
-    ledConfig.attachGreenPin(ledDebugGreen);
-    ledConfig.attachBluePin(ledDebugBlue);
+    ledConfig->attachRedPin(ledDebugRed);
+    ledConfig->attachGreenPin(ledDebugGreen);
+    ledConfig->attachBluePin(ledDebugBlue);
 
-    server.start();
+    // server.start();
+    queue->addColor(0,255,255,255,1000,3,true);
 }
-
-RGBQueue queue;
 
 //deciding to not have any loops inside loop(), makes keeping framerate correct easier
 //but i have to have these globals
@@ -95,12 +95,11 @@ void loop()
 {
     currentTime = millis();
 
-    server.update(queue);
-
+    // server.update(queue);
     //frame counter
     if (currentTime-startTime >= period)
     {
-        RGBAnimate(period, colorTime, queue, ledConfig);
+        RGBAnimate(period, colorTime, *queue, *ledConfig);
 
         startTime = currentTime;
     }
