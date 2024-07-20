@@ -27,7 +27,7 @@ int period = 1000/fps;
 //defining pins to be used
 uint8_t ledStripRed = D0;
 uint8_t ledStripGreen = D2;
-uint8_t ledStripBlue = D3;
+uint8_t ledStripBlue = D4;
 
 uint8_t ledDebugRed = D9;
 uint8_t ledDebugGreen = D8;
