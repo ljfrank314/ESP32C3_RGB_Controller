@@ -18,11 +18,13 @@ void RGBQueue::addColor(int index, int red, int green, int blue, int riseTime, f
         if (!looping)
         {
             animation.setFrame(index + 1);
-            if (index == 0) loadArray();
+            if (index == 0)
+            {
+                iterator = 0;
+                loadArray();
+            }
         }
         animation.setFrame(index, red, green, blue, riseTime, alpha, looping);
-
-        iterator = 0;
     }
 }
 

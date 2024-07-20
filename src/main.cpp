@@ -27,7 +27,7 @@ int period = 1000/fps;
 //defining pins to be used
 uint8_t ledStripRed = D0;
 uint8_t ledStripGreen = D2;
-uint8_t ledStripBlue = D4;
+uint8_t ledStripBlue = D3;
 
 uint8_t ledDebugRed = D9;
 uint8_t ledDebugGreen = D8;
@@ -39,7 +39,6 @@ RGBConfig ledConfig(uint8_t(1), uint8_t(2), uint8_t(3), uint32_t(5000), uint8_t(
 
 void setup()
 {
-    Serial.begin(115200);
     ledConfig.attachRedPin(ledStripRed);
     ledConfig.attachGreenPin(ledStripGreen);
     ledConfig.attachBluePin(ledStripBlue);
@@ -55,10 +54,8 @@ void setup()
 
     // flash green debug led until wifi is connected
     while (WiFi.status() != WL_CONNECTED){
-        Serial.print('.');
         delay(100);
     }
-    Serial.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 
     //end of setup so frame timer is started
     startTime = millis();
@@ -66,30 +63,34 @@ void setup()
     server.setup(queue);
     server.start();
 
-    queue.addColor(0,1024,0,0,1000,3,true);//here to have cmmit message ifogot something
-    queue.addColor(1,0,1024,0,1000,3,true);
-    queue.addColor(2,0,0,1024,1000,3,true);
-    queue.addColor(3,0,0,0,1000,3,true);
-    queue.addColor(4,1024,1024,1024,1000,-3,true);
-    queue.addColor(5,0,0,0,1000,3,false);
+    queue.addColor(0,1024,1024,1024,3000,3,false);
 }
 
 //deciding to not have any loops inside loop(), makes keeping framerate correct easier
 //but i have to have these globals
 unsigned long colorTime = 0;
+unsigned long frameTime = 0;
+unsigned long lastFrameTime = 0;
 
 void loop()
 {
+    bool frame = false;
     currentTime = millis();
+    frameTime = micros();
 
     //frame counter
     if (currentTime-startTime >= period)
     {
+        frame = true;
         RGBAnimate(period, colorTime, queue, ledConfig);
-
+        server.update();
         startTime = currentTime;
 
         //Debuging
-        Serial.printf("\nStack:%d,Heap:%lu\n", uxTaskGetStackHighWaterMark(NULL), (unsigned long)ESP.getFreeHeap());
+    }
+    if (frame)
+    {
+        lastFrameTime = (micros() - frameTime);
+        frame = false;
     }
 }
