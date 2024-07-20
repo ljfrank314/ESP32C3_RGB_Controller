@@ -12,8 +12,8 @@ RGBConfig::RGBConfig(uint8_t redChannel, uint8_t greenChannel, uint8_t blueChann
 
 void RGBConfig::setRGB(uint32_t redDuty, uint32_t greenDuty, uint32_t blueDuty)
 {
-    int maxPWM = static_cast<int>(pow(resolution, 2)-1);
-    if (redDuty >= maxPWM && greenDuty >= maxPWM && blueDuty >= maxPWM)
+    int maxPWM = static_cast<int>(pow(2, resolution)-1);
+    if (redDuty <= maxPWM && greenDuty <= maxPWM && blueDuty <= maxPWM)
     {
         ledcWrite(redChannel, redDuty);
         ledcWrite(greenChannel, greenDuty);
@@ -46,7 +46,7 @@ void RGBConfig::detachGreenPin(uint8_t pin)
     ledcDetachPin(pin);
 }
 
-void RGBConfig::detachBluePin(uint8_t pin)
+void RGBConfig::detachBluePin(uint8_t pin) //????? what???
 {
     ledcDetachPin(pin);
 }

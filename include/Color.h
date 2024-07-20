@@ -3,7 +3,7 @@
 
 struct Animation
 {
-    const int totalFrames = 99;
+    const int totalFrames = 50;
     struct Color
     {
         int red;
@@ -17,7 +17,7 @@ struct Animation
         bool operator!=(const Color& other) const;
 
         Color() : red(0), green(0), blue(0), riseTime(0), alpha(0), looping(0) {};
-    } frames[100];
+    } frames[45];
 
     Animation() {}
 
