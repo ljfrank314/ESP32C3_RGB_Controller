@@ -28,7 +28,7 @@ const String password = "***REMOVED***";
 //time vars for maintaining framerate
 unsigned long startTime;
 unsigned long currentTime;
-int fps = 5;
+int fps = 60;
 int period = 1000/fps;
 
 //defining pins to be used
@@ -78,10 +78,11 @@ void setup()
 
 
     // server.start();
-    queue.addColor(0,500,500,500,10000,3,true);
-    queue.addColor(1,2,2,255,10000,3,true);
-    queue.addColor(2,2,2,2,10000,3,true);
-    queue.addColor(3,0,0,0,10000,3,false);
+    queue.addColor(0,1024,0,0,1000,3,true);
+    queue.addColor(1,0,1024,0,1000,3,true);
+    queue.addColor(2,0,0,1024,1000,3,true);
+    queue.addColor(3,1024,1024,1024,1000,-3,true);
+    queue.addColor(4,0,0,0,1000,3,false);
 }
 
 //deciding to not have any loops inside loop(), makes keeping framerate correct easier
@@ -101,17 +102,17 @@ void loop()
         startTime = currentTime;
 
             // Print the contents of animation deltas and the first frame's RGB values
-        Serial.printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAnimation Deltas 0: R: %i, G: %i, B: %i\n", 
-        queue.animationDeltas[0][0], queue.animationDeltas[0][1], queue.animationDeltas[0][2]);
-                                                      Serial.printf("Animation Deltas 1: R: %i, G: %i, B: %i\n", 
-        queue.animationDeltas[1][0], queue.animationDeltas[1][1], queue.animationDeltas[1][2]);
-                                                      Serial.printf("Animation Deltas 2: R: %i, G: %i, B: %i\n", 
-        queue.animationDeltas[2][0], queue.animationDeltas[2][1], queue.animationDeltas[2][2]);
-        Serial.printf("Frame[iterator] RGB: R: %i, G: %i, B: %i\n", 
-        queue.animation.frames[queue.iterator].red, queue.animation.frames[queue.iterator].green, queue.animation.frames[queue.iterator].blue);
-        Serial.printf("Frame[iterator + 1] RGB: R: %i, G: %i, B: %i\n", 
-        queue.animation.frames[queue.iterator + 1].red, queue.animation.frames[queue.iterator + 1].green, queue.animation.frames[queue.iterator + 1].blue);
-        Serial.printf("Colortime: %i\n", colorTime);
-        Serial.printf("Queue Iterator: %i, Looping: %d\n", queue.iterator, queue.animation.frames[queue.iterator].looping);
+        // Serial.printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAnimation Deltas 0: R: %i, G: %i, B: %i\n", 
+        // queue.animationDeltas[0][0], queue.animationDeltas[0][1], queue.animationDeltas[0][2]);
+        //                                               Serial.printf("Animation Deltas 1: R: %i, G: %i, B: %i\n", 
+        // queue.animationDeltas[1][0], queue.animationDeltas[1][1], queue.animationDeltas[1][2]);
+        //                                               Serial.printf("Animation Deltas 2: R: %i, G: %i, B: %i\n", 
+        // queue.animationDeltas[2][0], queue.animationDeltas[2][1], queue.animationDeltas[2][2]);
+        // Serial.printf("Frame[iterator] RGB: R: %i, G: %i, B: %i\n", 
+        // queue.animation.frames[queue.iterator].red, queue.animation.frames[queue.iterator].green, queue.animation.frames[queue.iterator].blue);
+        // Serial.printf("Frame[iterator + 1] RGB: R: %i, G: %i, B: %i\n", 
+        // queue.animation.frames[queue.iterator + 1].red, queue.animation.frames[queue.iterator + 1].green, queue.animation.frames[queue.iterator + 1].blue);
+        // Serial.printf("Colortime: %i\n", colorTime);
+        // Serial.printf("Queue Iterator: %i, Looping: %d\n", queue.iterator, queue.animation.frames[queue.iterator].looping);
     }
 }
