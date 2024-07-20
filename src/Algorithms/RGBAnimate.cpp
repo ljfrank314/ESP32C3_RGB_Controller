@@ -8,7 +8,7 @@ RGBAnimate::RGBAnimate(int &period, unsigned long &time, RGBQueue& queue, RGBCon
     int currentFrameRiseTime = queue.animation.frames[queue.iterator].riseTime;
     float currentFrameAlpha = queue.animation.frames[queue.iterator].alpha;
 
-    if (time < currentFrameRiseTime)
+    if (time <= currentFrameRiseTime)
     {
         int deltaRed = queue.animationDeltas[2][0] - queue.animationDeltas[0][0];
         int deltaGreen = queue.animationDeltas[2][1] - queue.animationDeltas[0][1];

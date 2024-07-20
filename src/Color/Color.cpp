@@ -32,5 +32,5 @@ void Animation::setFrame(int iterator)
 
 bool Animation::loopEnd(int iterator)
 {
-    return (!frames[iterator].looping);
+    return (!frames[iterator].looping & !frames[iterator + 1].looping);
 }
