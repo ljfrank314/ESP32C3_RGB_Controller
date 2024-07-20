@@ -13,7 +13,7 @@ RGBQueue::RGBQueue() : iterator(0)
 
 void RGBQueue::addColor(int index, int red, int green, int blue, int riseTime, float alpha, bool looping)
 {
-    if (index > animation.totalFrames) //idk if this is faster than lunchLine.size();
+    if (index < animation.totalFrames) //idk if this is faster than lunchLine.size();
     {    
         if (!looping)
         {

@@ -23,7 +23,7 @@
 const String ssid = "chill tf out dog";
 const String password = "***REMOVED***";
 
-// RGBServer server(80);
+WebServer server(80);
 
 //time vars for maintaining framerate
 unsigned long startTime;
@@ -62,11 +62,10 @@ void setup()
 
     // flash green debug led until wifi is connected
     while (WiFi.status() != WL_CONNECTED){
-        digitalWrite(ledDebugGreen,HIGH);
+        Serial.print('.');
         delay(100);
-        digitalWrite(ledDebugGreen,LOW);
-        delay(1000);
     }
+    Serial.print("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 
     //end of setup so frame timer is started
     startTime = millis();
@@ -77,12 +76,13 @@ void setup()
 
 
 
-    // server.start();
+    start(server);
     queue.addColor(0,1024,0,0,1000,3,true);//here to have cmmit message ifogot something
     queue.addColor(1,0,1024,0,1000,3,true);
     queue.addColor(2,0,0,1024,1000,3,true);
-    queue.addColor(3,1024,1024,1024,1000,-3,true);
-    queue.addColor(4,0,0,0,1000,3,false);
+    queue.addColor(3,0,0,0,1000,3,true);
+    queue.addColor(4,1024,1024,1024,1000,-3,true);
+    queue.addColor(5,0,0,0,1000,3,false);
 }
 
 //deciding to not have any loops inside loop(), makes keeping framerate correct easier
@@ -93,7 +93,7 @@ void loop()
 {
     currentTime = millis();
 
-    // server.update(queue);
+    // update(queue,server);
     //frame counter
     if (currentTime-startTime >= period)
     {
@@ -102,17 +102,6 @@ void loop()
         startTime = currentTime;
 
             // Print the contents of animation deltas and the first frame's RGB values
-        // Serial.printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAnimation Deltas 0: R: %i, G: %i, B: %i\n", 
-        // queue.animationDeltas[0][0], queue.animationDeltas[0][1], queue.animationDeltas[0][2]);
-        //                                               Serial.printf("Animation Deltas 1: R: %i, G: %i, B: %i\n", 
-        // queue.animationDeltas[1][0], queue.animationDeltas[1][1], queue.animationDeltas[1][2]);
-        //                                               Serial.printf("Animation Deltas 2: R: %i, G: %i, B: %i\n", 
-        // queue.animationDeltas[2][0], queue.animationDeltas[2][1], queue.animationDeltas[2][2]);
-        // Serial.printf("Frame[iterator] RGB: R: %i, G: %i, B: %i\n", 
-        // queue.animation.frames[queue.iterator].red, queue.animation.frames[queue.iterator].green, queue.animation.frames[queue.iterator].blue);
-        // Serial.printf("Frame[iterator + 1] RGB: R: %i, G: %i, B: %i\n", 
-        // queue.animation.frames[queue.iterator + 1].red, queue.animation.frames[queue.iterator + 1].green, queue.animation.frames[queue.iterator + 1].blue);
-        // Serial.printf("Colortime: %i\n", colorTime);
-        // Serial.printf("Queue Iterator: %i, Looping: %d\n", queue.iterator, queue.animation.frames[queue.iterator].looping);
+        Serial.printf("\nStack:%d,Heap:%lu\n", uxTaskGetStackHighWaterMark(NULL), (unsigned long)ESP.getFreeHeap());
     }
 }
