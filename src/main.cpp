@@ -78,7 +78,7 @@ void setup()
 
 
     // server.start();
-    queue.addColor(0,1024,0,0,1000,3,true);
+    queue.addColor(0,1024,0,0,1000,3,true);//here to have cmmit message ifogot something
     queue.addColor(1,0,1024,0,1000,3,true);
     queue.addColor(2,0,0,1024,1000,3,true);
     queue.addColor(3,1024,1024,1024,1000,-3,true);
