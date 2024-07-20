@@ -4,15 +4,23 @@
 #include <WebServer.h>
 #include "RGBQueue.h"
 
+class RGBServer
+{
+public:
+    RGBServer(int port);
+    /// @brief Handle clients and whatnot
+    /// @return Returns 0 (in the future might throw debug codes idk dont taze me bro)
+    void setup(RGBQueue& queue);
 
-/// @brief Handle clients and whatnot
-/// @return Returns 0 (in the future might throw debug codes idk dont taze me bro)
-void update(RGBQueue& queue,WebServer& server);
+    /// @brief Start the server
+    void start();
 
-/// @brief Start the server
-void start(WebServer& server);
+    /// @brief ε/̵͇̿̿/’̿’̿ ̿(ʘ ͜ʖ ʘ)
+    void kill();
 
-/// @brief ε/̵͇̿̿/’̿’̿ ̿(ʘ ͜ʖ ʘ)
-void kill(WebServer& server);
+    void update();
+private:
+    WebServer server;
+};
 
 #endif
