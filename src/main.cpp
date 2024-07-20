@@ -8,13 +8,6 @@
 #include "RGBAnimate.h"
 #include "RGBConfig.h"
 
-/*
-* TODO:
-* Switch to ledc for all led writes
-* write color array and deque implementation
-* touch grass / shower / find love (low priority)
-*/
-
 //hardcoded passwords, proper solution is to start the board as an
 //access point, host a webpage where you input your password, then
 //switch to station mode and connect to wifi. Wifi creds can still 
@@ -23,7 +16,7 @@
 const String ssid = "chill tf out dog";
 const String password = "***REMOVED***";
 
-WebServer server(80);
+RGBServer server(80);
 
 //time vars for maintaining framerate
 unsigned long startTime;
@@ -69,14 +62,10 @@ void setup()
 
     //end of setup so frame timer is started
     startTime = millis();
-    /*
-    vvvvvvvvvv D E B U G vvvvvvvvvv
-    */
 
+    server.setup(queue);
+    server.start();
 
-
-
-    start(server);
     queue.addColor(0,1024,0,0,1000,3,true);//here to have cmmit message ifogot something
     queue.addColor(1,0,1024,0,1000,3,true);
     queue.addColor(2,0,0,1024,1000,3,true);
@@ -93,7 +82,6 @@ void loop()
 {
     currentTime = millis();
 
-    // update(queue,server);
     //frame counter
     if (currentTime-startTime >= period)
     {
@@ -101,7 +89,7 @@ void loop()
 
         startTime = currentTime;
 
-            // Print the contents of animation deltas and the first frame's RGB values
+        //Debuging
         Serial.printf("\nStack:%d,Heap:%lu\n", uxTaskGetStackHighWaterMark(NULL), (unsigned long)ESP.getFreeHeap());
     }
 }
