@@ -1,10 +1,6 @@
 #include "RGBServer.h"
 
-RGBServer::RGBServer(int port)
-: server(port)
-{}
-
-void RGBServer::update(RGBQueue& queue)
+void update(RGBQueue& queue, WebServer& server)
 {
     server.on("/",[&]()
     {
@@ -35,12 +31,12 @@ void RGBServer::update(RGBQueue& queue)
     });
 }
 
-void RGBServer::start()
+void start(WebServer& server)
 {
     server.begin();
 }
 
-void RGBServer::kill()
+void kill(WebServer& server)
 {
     server.close();
 }
