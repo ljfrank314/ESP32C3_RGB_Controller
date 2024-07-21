@@ -33,7 +33,8 @@ uint8_t ledDebugRed = D9;
 uint8_t ledDebugGreen = D8;
 uint8_t ledDebugBlue = D7;
 
-RGBQueue queue;
+unsigned long colorTime = 0;
+RGBQueue queue(colorTime);
 RGBConfig ledConfig(uint8_t(1), uint8_t(2), uint8_t(3), uint32_t(5000), uint8_t(10));
 
 
@@ -68,7 +69,6 @@ void setup()
 
 //deciding to not have any loops inside loop(), makes keeping framerate correct easier
 //but i have to have these globals
-unsigned long colorTime = 0;
 unsigned long frameTime = 0;
 unsigned long lastFrameTime = 0;
 
