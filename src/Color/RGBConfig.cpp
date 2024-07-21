@@ -13,12 +13,13 @@ RGBConfig::RGBConfig(uint8_t redChannel, uint8_t greenChannel, uint8_t blueChann
 void RGBConfig::setRGB(uint32_t redDuty, uint32_t greenDuty, uint32_t blueDuty)
 {
     int maxPWM = static_cast<int>(pow(2, resolution)-1);
-    if (redDuty <= maxPWM && greenDuty <= maxPWM && blueDuty <= maxPWM)
-    {
-        ledcWrite(redChannel, redDuty);
-        ledcWrite(greenChannel, greenDuty);
-        ledcWrite(blueChannel, blueDuty);
-    }
+    if (redDuty > maxPWM) redDuty = maxPWM;
+    if (greenDuty > maxPWM) greenDuty = maxPWM;
+    if (blueDuty > maxPWM) blueDuty = maxPWM;
+
+    ledcWrite(redChannel, redDuty);
+    ledcWrite(greenChannel, greenDuty);
+    ledcWrite(blueChannel, blueDuty);
 }
 
 void RGBConfig::attachRedPin(uint8_t pin)

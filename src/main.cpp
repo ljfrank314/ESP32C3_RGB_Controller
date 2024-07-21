@@ -53,10 +53,7 @@ void setup()
     WiFi.mode(WIFI_STA);
     WiFi.begin(ssid,password);
 
-    // flash green debug led until wifi is connected
-    while (WiFi.status() != WL_CONNECTED){
-        delay(100);
-    }
+    while (WiFi.status() != WL_CONNECTED){}
 
     //end of setup so frame timer is started
     startTime = millis();
@@ -69,28 +66,18 @@ void setup()
 
 //deciding to not have any loops inside loop(), makes keeping framerate correct easier
 //but i have to have these globals
-unsigned long frameTime = 0;
 unsigned long lastFrameTime = 0;
 
 void loop()
 {
-    bool frame = false;
     currentTime = millis();
-    frameTime = micros();
 
     //frame counter
     if (currentTime-startTime >= period)
     {
-        frame = true;
         RGBAnimate(period, colorTime, queue, ledConfig);
         server.update();
+        ledConfig.setRGB(queue.animationDeltas[1][0], queue.animationDeltas[1][1], queue.animationDeltas[1][2]);
         startTime = currentTime;
-
-        //Debuging
-    }
-    if (frame)
-    {
-        lastFrameTime = (micros() - frameTime);
-        frame = false;
     }
 }
