@@ -2,6 +2,7 @@
 #define RGBQUEUE_H
 
 #include "Color.h"
+#include "RGBConfig.h"
 #include "Step.h"
 
 class RGBQueue
