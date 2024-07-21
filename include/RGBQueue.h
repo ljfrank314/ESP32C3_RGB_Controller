@@ -9,7 +9,7 @@ class RGBQueue
 public:
     int animationDeltas[3][3];
 
-    RGBQueue();
+    RGBQueue(unsigned long& time);
 
     Animation animation;
 
@@ -20,6 +20,9 @@ public:
     void animateRGB(int red, int green, int blue);
 
     int iterator;
+
+private:
+    unsigned long& time;
 };
 
 #endif

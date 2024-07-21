@@ -20,12 +20,13 @@ RGBAnimate::RGBAnimate(int &period, unsigned long &time, RGBQueue& queue, RGBCon
             queue.animationDeltas[0][1] + (deltaGreen * weight),
             queue.animationDeltas[0][2] + (deltaBlue * weight));
 
-        time += period;
+        //if colorTime + period is going to overshoot the risetime, set time to risetime so the full color is reached on the last frame
+        if (currentFrameRiseTime - time < period) time = currentFrameRiseTime;
+        else time += period;
     }
     else
     {       
         queue.loadArray();
-        time = 0;
     }
     config.setRGB(queue.animationDeltas[1][0], queue.animationDeltas[1][1], queue.animationDeltas[1][2]);
 }

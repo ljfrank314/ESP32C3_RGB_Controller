@@ -1,6 +1,6 @@
 #include "RGBQueue.h"
 
-RGBQueue::RGBQueue() : iterator(0)
+RGBQueue::RGBQueue(unsigned long& time) : time(time), iterator(0)
 {
     for (int i = 0; i < 3; i++)
     {
@@ -45,6 +45,9 @@ void RGBQueue::loadArray()
     {
         iterator = 0;
     }
+
+    time = 0;
+    
     animationDeltas[0][0] = animationDeltas[1][0];
     animationDeltas[0][1] = animationDeltas[1][1];
     animationDeltas[0][2] = animationDeltas[1][2];
