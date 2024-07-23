@@ -16,7 +16,7 @@ public:
 
     void addColor(int index, int red, int green, int blue, int riseTime, float alpha, bool looping);
 
-    void loadArray();
+    void loadArray(bool iterate);
 
     void animateRGB(int red, int green, int blue);
 

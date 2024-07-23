@@ -27,7 +27,7 @@ RGBAnimate::RGBAnimate(int &period, unsigned long &time, RGBQueue& queue, RGBCon
     }
     else
     {       
-        queue.loadArray();
+        queue.loadArray(true);
     }
     
 }
