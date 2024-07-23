@@ -19,12 +19,10 @@ void RGBQueue::addColor(int index, int red, int green, int blue, int riseTime, f
         {
             animation.setFrame(index + 1);
         }
-        if (index == 0)
-        {
-            iterator = 0;
-        }
         animation.setFrame(index, red, green, blue, riseTime, alpha, looping);
-        loadArray();
+
+        iterator = 0;
+        loadArray(false);
     }
 }
 
@@ -35,21 +33,23 @@ void RGBQueue::animateRGB(int red, int green, int blue)
     animationDeltas[1][2] = blue;
 }
 
-void RGBQueue::loadArray()
+void RGBQueue::loadArray(bool iterate)
 {
-    if (animation.frames[0].looping && !animation.loopEnd(iterator))
+    if (iterate == true)
     {
-        iterator++;
-    }
-    else
-    {
-        iterator = 0;
+        if (animation.frames[iterator].looping && animation.frames[0].looping)
+        {
+            iterator++;
+        }
+        else
+        {
+            iterator = 0;
+        }
     }
 
     animationDeltas[0][0] = animationDeltas[1][0];
     animationDeltas[0][1] = animationDeltas[1][1];
     animationDeltas[0][2] = animationDeltas[1][2];
-
     animationDeltas[2][0] = animation.frames[iterator].red;
     animationDeltas[2][1] = animation.frames[iterator].green;
     animationDeltas[2][2] = animation.frames[iterator].blue;

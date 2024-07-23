@@ -64,19 +64,15 @@ void setup()
     queue.addColor(0,1024,1024,1024,3000,3,false);
 }
 
-//deciding to not have any loops inside loop(), makes keeping framerate correct easier
-//but i have to have these globals
-unsigned long lastFrameTime = 0;
-
 void loop()
 {
     currentTime = millis();
+    server.update();
 
     //frame counter
     if (currentTime-startTime >= period)
     {
         RGBAnimate(period, colorTime, queue, ledConfig);
-        server.update();
         ledConfig.setRGB(queue.animationDeltas[1][0], queue.animationDeltas[1][1], queue.animationDeltas[1][2]);
         startTime = currentTime;
     }
